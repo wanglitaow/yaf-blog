@@ -2,63 +2,42 @@
 
 这是yaf的学习教材，一步一步教你学习yaf
 
+关于入口文件 index.php
 
-YafUse - I Use Yaf!
+第一种，index.php 跟conf同一目录
 
-Yaf 地址:https://github.com/laruence/php-yaf 请针对自己的php 版本进行安装,注意服务器url路由规则
+index.php 内容
 
-Why I Do
+    define("APP_PATH",realpath(dirname(__FILE__)));
+    $app = new Yaf_Application(APP_PATH.'/conf/application.ini');
+    $app->run();
+ nginx.conf
 
-自己在项目中用了yaf，用了很多外部类，感觉需要优化地方很多，逐渐改进。这里只是一个简单的例子，可以用于yaf快速上手，我的修改有些借鉴别人的思路，想要用好希望多看鸟哥的官方文档及源码.(http://www.laruence.com/manual/)
+            root  /data1/www/yaf-blog;
+            location / {
+                index  index.html index.htm index.php;
+                try_files $uri $uri/ /index.php$uri;
+            }
 
-What I Do
+  第二种，index.php在pulic里面的时候
 
-layout布局实现
-bootstrap 后台管理界面
-PDO数据库操作类(Mysql数据主从实现)
-简单的增删改查实现
-错误捕捉显示及日志记录
-Requirement
+  index.php 内容
 
-Nginx
-PHP 5.2 +
-PHP Yet another Framework
-Mysql
-How To Use
+    define("APP_PATH",  realpath(dirname(__FILE__) . '/../')); /* 指向public的上一级 */
+    $app  = new Yaf_Application(APP_PATH . "/conf/application.ini");
+    $app->run();
+nginx conf 内容
 
-Rewrite rules
+       root  /data1/www/yaf-blog;
+        include enable-php.conf;
 
-Apache
+       location  / {
+          index public/index.php;
+          if (!-f $request_filename) {
+              rewrite ^/(.*) /public/index.php?$1 last;
+          }
+       }
 
-#.htaccess
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule .* index.php
-Nginx (nginx.conf已有示例)
 
-server {
-  listen ****;
-  server_name  domain.com;
-  root   document_root;
-  index  index.php index.html index.htm;
 
-  location / {
-		try_files $uri $uri/ /index.php?$args;
-  }
 
-}
-Database
-
-使用shidatabase.sql,简单的例子，只有一个数据表(增删改查实现)
-
-app.ini
-
-详细见具体文件
-
-ErrorAction
-
-报错开启关闭在ini中有配置，可以记录为日志文件，需要有写权限。在Error.php实现。
-
-user name and pws
-
-admin / 12345678
