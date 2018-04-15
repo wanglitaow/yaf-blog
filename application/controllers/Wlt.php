@@ -6,6 +6,15 @@
 
             echo date('Y-m-d H:i:s');exit;
         }
+
+        public function getenvAction(){
+
+            $config = Yaf\Application::app()->getConfig();
+            var_dump($config->application->directory);
+
+
+
+        }
     }
 
 

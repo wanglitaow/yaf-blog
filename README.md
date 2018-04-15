@@ -28,7 +28,10 @@ index.php 内容
     $app->run();
 nginx conf 内容
 
-       root  /data1/www/yaf-blog;
+		listen 80 ;
+        server_name 132a.com;
+        index index.html index.htm index.php;
+        root  /data1/www/yaf-blog;
         include enable-php.conf;
 
        location  / {
@@ -37,7 +40,4 @@ nginx conf 内容
               rewrite ^/(.*) /public/index.php?$1 last;
           }
        }
-
-
-
 
